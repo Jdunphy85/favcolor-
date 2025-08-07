@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Favorite Color Questionnaire</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        form label {
+            display: block;
+            padding: 8px 0;
+            font-size: 1.1em;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            margin: 20px 0 0 0;
+            padding: 10px;
+            font-size: 1em;
+            background: #6c63ff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #574fd6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>What is your favorite color?</h1>
+        <form id="questionnaire">
+            <label>
+                <input type="radio" name="color" value="Red" data-score="2" required>
+                Red
+            </label>
+            <label>
+                <input type="radio" name="color" value="Blue" data-score="2">
+                Blue
+            </label>
+            <label>
+                <input type="radio" name="color" value="Pink" data-score="4">
+                Pink
+            </label>
+            <label>
+                <input type="radio" name="color" value="Purple" data-score="10">
+                Purple
+            </label>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="result" style="display:none;">
+            <h2>Report</h2>
+            <p id="report-text"></p>
+            <button id="download-report">Download Report</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById('questionnaire').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const colorOption = document.querySelector('input[name="color"]:checked');
+            if (!colorOption) return;
+
+            const color = colorOption.value;
+            const score = parseInt(colorOption.getAttribute('data-score'));
+
+            // Show result
+            const reportText = `Your favorite color is ${color} and your score is ${score}.`;
+            document.getElementById('report-text').textContent = reportText;
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('questionnaire').style.display = 'none';
+
+            // Prepare for download
+            document.getElementById('download-report').onclick = function() {
+                const blob = new Blob([reportText], { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'favorite-color-report.txt';
+                link.click();
+                URL.revokeObjectURL(link.href);
+            };
+        });
+    </script>
+</body>
+</html>
